@@ -18,6 +18,24 @@ const db = knex(knexConfig);
 
 // endpoints here
 
+server.get('/api/zoos', async (req, res) => {
+
+  try {
+    const animals = await db('zoos');
+
+    if (animals) {
+      res.status(200).json(animals);
+    }
+    else {
+      res.status(404).json('This page is not available.')
+    }
+  }
+  catch (e) {
+    res.status(500).json(e)
+  }
+ 
+})
+
 server.post('/api/zoos', async (req,res) => {
 
   const newAnimal = req.body;
