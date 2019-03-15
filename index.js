@@ -1,12 +1,21 @@
 const express = require('express');
 const helmet = require('helmet');
+const knex = require('knex');
 
 const server = express();
 
 server.use(express.json());
 server.use(helmet());
 
-const db = [];
+const knexConfig = {
+  client: 'sqlite3',
+  connection: {
+    filename: './data/lambda.sqlite3',
+  },
+  useNullAsDefault: true // needed for sqlite
+}
+
+const db = knex(knexConfig);
 
 // endpoints here
 
@@ -14,7 +23,7 @@ server.post('/api/zoos', async (req,res) => {
 
   const newAnimal = req.body;
   try {
-    const added = db.insert(newAnimal);
+    const added = await db.insert(newAnimal);
     if (added) {
         res.status(201).json('Animal was added successfully.')
     }
