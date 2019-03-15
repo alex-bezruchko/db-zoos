@@ -70,6 +70,29 @@ server.get('/api/zoos/:id', async (req, res) => {
   // cons
 })
 
+server.put('/api/zoos/:id', async (req, res) => {
+  const id = req.params.id;
+  const updatedAnimal = req.body;
+  try {
+    if (updatedAnimal.name.length > 0) {
+      const updated = await db('zoos').where({id}).update(updatedAnimal);
+      if (updated) {
+        res.status(200).json('Animal was successfully updated.');
+      }
+      else {
+        res.status(404).json('This id is not available.');
+      }
+    }
+    else {
+      res.json('Name is required.');
+    }
+  }
+  catch (e) {
+    res.status(500).json(e);
+  }
+})
+
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
